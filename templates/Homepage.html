@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stylish EAMCET Results</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    body {
+    padding: 0; /* Remove default padding */
+    background-image: url("{{ url_for('static', filename='backedu.jpg') }}"); /* Path to your image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; 
+    margin: 0;
+    /* background-color: #f8f9fa; */
+    height: 100vh; /* Ensure the height is 100% of the viewport */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-group label {
+    font-weight: bold;
+    color: #333;
+  }
+
+    .search-btn {
+      background-color: #007bff;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .search-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">EAMCET</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/predict">College Predictor</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search" action="/search" method="GET">
+          <input id="query" name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>        
+      </div>
+    </div>
+  </nav>
+
+  <!-- Form -->
+  <div class="form-container">
+    <form>
+      <center><h2 class="mb-4">EAMCET RESULTS</h2></center>
+      
+      <!-- Name Field -->
+      <div class="form-group mb-3">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name">
+      </div>
+
+      <!-- Dropdown Fields -->
+      <div class="form-group mb-3">
+        <label for="college">College</label>
+        <select id="college" class="form-control" required>
+          <option value="" selected>All Colleges</option>
+          {% for college in colleges %}
+          <option value="{{ college.value }}">{{ college.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Branch Dropdown -->
+      <div class="form-group mb-3">
+        <label for="branch">Branch</label>
+        <select id="branch" class="form-control" required>
+          <option value="" selected>All Branches</option>
+        </select>
+      </div>
+      
+      <div class="form-group mb-4">
+        <label for="year">Year</label>
+        <select id="year" name="year" class="form-select">
+          <option value="2023" selected>2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+        </select>
+      </div>
+
+      <!-- Search Button -->
+      <center><button type="button" class="btn btn-primary search-btn" id="searchBtn" data-bs-toggle="modal" data-bs-target="#resultsModal">Search</button></center>
+    </form>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="resultsModal" tabindex="-1" aria-labelledby="resultsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="resultsModalLabel">Search Results</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="studentResults">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  
+  <script>
+    document.getElementById('college').addEventListener('change', function () {
+      const collegeId = this.value;
+      const branchDropdown = document.getElementById('branch');
+      
+      branchDropdown.innerHTML = '';
+
+      fetch('/get-branches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ college_id: collegeId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        branchDropdown.innerHTML = '<option value="" selected>All Branches</option>';
+        data.branches.forEach(branch => {
+          const option = document.createElement('option');
+          option.value = branch.branch_name;
+          option.textContent = branch.branch_name;
+          branchDropdown.appendChild(option);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching branches:', error);
+        branchDropdown.innerHTML = '<option value="" disabled selected>Error loading branches</option>';
+      });
+    });
+
+    document.getElementById('searchBtn').addEventListener('click', function () {
+  const college = document.getElementById('college').value;
+  const branch = document.getElementById('branch').value;
+  const year = document.getElementById('year').value;
+  const name = document.getElementById('name').value;
+
+  // Fetch students based on selected filters
+  fetch('/search-students', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ college, branch,name, year })
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      const allresults = document.getElementById('resultsModalLabel');
+      allresults.innerHTML = `Found ${data.Results} students`;
+      const studentResults = document.getElementById('studentResults');
+      studentResults.innerHTML = ''; // Clear previous results
+
+      if (data.students && data.students.length > 0) {
+        data.students.forEach(student => {
+          // Create a button for each student
+          const studentButton = document.createElement('button');
+          studentButton.classList.add('btn', 'btn-outline-dark', 'w-100', 'mb-3');
+          studentButton.style.height = '60px'; // Better UI
+          studentButton.textContent = student.candidate_name || 'Unknown';
+          studentButton.dataset.targetId = `detailsCollapse${student.id}`;
+          studentButton.setAttribute('aria-expanded', 'false'); // Initially collapsed
+
+          // Create a collapsible section for each student
+          const studentCollapse = document.createElement('div');
+          studentCollapse.id = `detailsCollapse${student.id}`;
+          studentCollapse.classList.add('collapse', 'custom-collapse');
+
+          const studentDetails = document.createElement('div');
+          studentDetails.classList.add('card', 'card-body', 'border', 'custom-card');
+          studentDetails.innerHTML = `
+          <p><strong>College Name:</strong> ${student.college}</p>
+          <p><strong>Branch:</strong> ${student.branch}</p>
+            <p><strong>Rank:</strong> ${student.rank}</p>
+            <p><strong>Gender:</strong> ${student.gender}</p>
+            <p><strong>Region:</strong> ${student.region}</p>
+            <p><strong>Category:</strong> ${student.category}</p>
+            <p><strong>Seat Category:</strong> ${student.seat_category}</p>
+          `;
+
+          studentCollapse.appendChild(studentDetails);
+          studentResults.appendChild(studentButton);
+          studentResults.appendChild(studentCollapse);
+
+          // Add click listener to toggle this student's section
+          studentButton.addEventListener('click', function () {
+            const targetId = this.dataset.targetId;
+            console.log(targetId)
+            // Toggle clicked student's section
+            const targetCollapse = document.getElementById(targetId);
+            const isCurrentlyExpanded = targetCollapse.classList.contains('show');
+
+            // Close all other collapsible sections
+            document.querySelectorAll('.collapse').forEach(collapse => {
+              collapse.classList.remove('show');
+              collapse.previousElementSibling.setAttribute('aria-expanded', 'false'); // Update button state
+            });
+
+            // Open only the clicked section if it wasn't already expanded
+            if (!isCurrentlyExpanded) {
+              targetCollapse.classList.add('show');
+              this.setAttribute('aria-expanded', 'true'); // Update button state
+            }
+          });
+        });
+      } else {
+        studentResults.innerHTML = '<p>No students found.</p>';
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching students:', error);
+    });
+});
+
+
+  </script>
+</body>
+</html>

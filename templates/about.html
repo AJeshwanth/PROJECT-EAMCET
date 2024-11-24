@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About EAMCET Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            padding: 0;
+            background-image: url("{{ url_for('static', filename='backedu.jpg') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.8); /* Slight transparency for a modern look */
+        }
+
+        .about-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9); /* Transparent white for readability */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .about-heading {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">EAMCET</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/predict">College Predictor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/about">About</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search" action="/search" method="GET">
+                    <input id="query" name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  </form> 
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <div class="about-container">
+        <div class="about-heading">About This Website</div>
+        <div class="about-text">
+            Hello, I am <b>Adusumalli Jeshwanth Raju</b>, a proud 3rd-year <b>Artificial Intelligence and Machine Learning (AIML)</b> student at <b>Geethanjali College of Engineering and Technology</b>.
+            <br><br>
+            This website is a project I developed to simplify and enhance the EAMCET college prediction and student data search process. Designed with user-friendliness in mind, it provides aspirants with insights into colleges and branches based on their ranks, helping them make informed decisions about their future education.
+            <br>
+            </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="color: black; font-size: 20px;">
+        &copy; A Jeshwanth Raju | EAMCET College Predictor
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

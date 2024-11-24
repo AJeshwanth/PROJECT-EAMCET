@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EAMCET Prediction</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+        padding: 0; /* Remove default padding */
+        background-image: url("{{ url_for('static', filename='backedu.jpg') }}"); /* Path to your image */
+        background-size: cover; /* Ensures the image covers the entire background */
+        background-repeat: no-repeat; /* Prevents the image from repeating */
+        background-position: center; 
+        margin: 0;
+        background-color: #f8f9fa;
+        height: 100vh; /* Ensure the height is 100% of the viewport */
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+    }
+
+    .prediction-container {
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .form-group label {
+      font-weight: bold;
+      color: #333;
+    }
+    .predict-btn {
+      background-color: #28a745;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .predict-btn:hover {
+      background-color: #218838;
+    }
+    .custom-modal-width {
+        max-width: 60%;  /* Adjust the percentage to your preferred width */
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">EAMCET</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">College Predictor</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search" action="/search" method="GET">
+              <input id="query" name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> 
+          </div>
+        </div>
+      </nav>
+  <!-- Prediction Div -->
+  <div class="prediction-container">
+    <form>
+      <h2 class="mb-4 text-center">EAMCET Prediction</h2>
+
+      <!-- Rank Field -->
+      <div class="form-group mb-3">
+        <label for="rank">Rank</label>
+        <input type="number" id="rank" name="rank" class="form-control" placeholder="Enter your rank" required>
+      </div>
+      <div class="form-group mb-3">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" class="form-select" required>
+            <option value="" selected disabled>Select Gender</option>
+            <option value="BOYS">Male</option>
+            <option value="GIRLS">Female</option>
+          </select>
+      </div>
+
+      <!-- Caste Dropdown -->
+      <div class="form-group mb-3">
+        <label for="category">Caste</label>
+        <select id="category" name="category" class="form-select" required>
+          <option value="" selected>Select Caste</option>
+          <option value="OC">OC</option>
+          <option value="BC_A">BC-A</option>
+          <option value="BC_B">BC-B</option>
+          <option value="BC_C">BC-C</option>
+          <option value="BC_D">BC-D</option>
+          <option value="BC_E">BC-E</option>
+          <option value="SC">SC</option>
+          <option value="ST">ST</option>
+        </select>
+      </div>
+
+      <!-- Branch Dropdown -->
+      <div class="form-group mb-3">
+        <label for="branch">Branch</label>
+        <select id="branch" name="branch" class="form-select">
+          <option value="" selected>All Branches</option>
+          <option value="CIV">CIV</option>
+          <option value="AID">AID</option>
+          <option value="CSO">CSO</option>
+          <option value="CSC">CSC</option>
+          <option value="ECI">ECI</option>
+          <option value="CIC">CIC</option>
+          <option value="AI">AI</option>
+          <option value="MCT">MCT</option>
+          <option value="ECM">ECM</option>
+          <option value="PLG">PLG</option>
+          <option value="ETM">ETM</option>
+          <option value="AIM">AIM</option>
+          <option value="BIO">BIO</option>
+          <option value="CSG">CSG</option>
+          <option value="PHD">PHD</option>
+          <option value="AGR">AGR</option>
+          <option value="CST">CST</option>
+          <option value="PHE">PHE</option>
+          <option value="ECE">ECE</option>
+          <option value="MET">MET</option>
+          <option value="MMS">MMS</option>
+          <option value="EEE">EEE</option>
+          <option value="CME">CME</option>
+          <option value="CHE">CHE</option>
+          <option value="CSI">CSI</option>
+          <option value="CSE">CSE</option>
+          <option value="CSM">CSM</option>
+          <option value="ANE">ANE</option>
+          <option value="CSW">CSW</option>
+          <option value="DTD">DTD</option>
+          <option value="FDT">FDT</option>
+          <option value="DRG">DRG</option>
+          <option value="AUT">AUT</option>
+          <option value="MMT">MMT</option>
+          <option value="CSB">CSB</option>
+          <option value="CSN">CSN</option>
+          <option value="MEC">MEC</option>
+          <option value="INF">INF</option>
+          <option value="EIE">EIE</option>
+          <option value="MIN">MIN</option>
+          <option value="PHM">PHM</option>
+          <option value="CSD">CSD</option>
+          <option value="BME">BME</option>
+          <option value="MTE">MTE</option>
+          <option value="TEX">TEX</option>
+        </select>
+      </div>
+
+      <!-- Predict Button -->
+      <div class="text-center">
+        <button type="button" class="btn predict-btn" onclick="predictCollege()">Predict</button>
+      </div>
+    </form>
+  </div>
+  <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="predictionModalLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="predictionModalLabel">Top Colleges you may get seat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>College Name</th>
+                <th>Cutoff Rank</th>
+                <th>Branch</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody id="result-body">
+              <!-- Results will be populated here -->
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<script>
+    async function predictCollege() {
+        const rank = document.getElementById('rank').value;
+        const gender = document.getElementById('gender').value;
+        let category = document.getElementById('category').value;
+        const branch = document.getElementById('branch').value;
+        // Validate inputs
+        if (!rank || !gender || !category || !branch) {
+            alert('Please fill all fields');
+            return;
+        }
+        
+        try {
+            // Send POST request to the backend
+            const response = await fetch('/predict-college', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ rank, gender, category, branch })
+            });
+
+            // Parse the JSON response
+            const data = await response.json();
+            console.log(data);  // Check the structure of the data
+            
+            // Check if the data contains colleges and if there are results
+            if (data.colleges && data.colleges.length > 0) {
+            const tableBody = document.getElementById('result-body');
+            tableBody.innerHTML = '';  // Clear the existing table data
+            
+            // Loop through the colleges and add them to the table
+            data.colleges.forEach(college => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).innerText = college.college_name || 'N/A';
+                row.insertCell(1).innerText = college.cutoff_rank || 'N/A';
+                row.insertCell(2).innerText = college.branch || 'N/A';
+                row.insertCell(3).innerText = college.category || 'N/A';
+            });
+
+            // Initialize and show the modal with the results
+            var myModal = new bootstrap.Modal(document.getElementById('resultModal'));
+            myModal.show();
+            } else {
+            alert('No colleges found matching your criteria.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error fetching the data. Please try again.');
+        }
+    }
+
+  </script>
+</body>
+</html>
