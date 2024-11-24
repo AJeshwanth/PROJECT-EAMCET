@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend access
 
 # MongoDB Configuration
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb+srv://<username>:DS31otkg2TlGy0NZ@<cluster-url>/myDatabase?retryWrites=true&w=majority")
 db = client["EAMCET"]  # Replace with your database name
 colleges_collection = db["EAMCET2023"]  # Replace with your collection name
 @app.route('/')
